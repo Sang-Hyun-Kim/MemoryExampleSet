@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MemoryExample", "MemoryExam
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ServerCore", "ServerCore\ServerCore.vcxproj", "{64448ECC-32AC-48E5-AB20-98B987BED95C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MemoryExample_03", "MemoryExample_03\MemoryExample_03.vcxproj", "{6E4C0837-FAB4-4760-A4FC-15EF89476173}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,6 +33,14 @@ Global
 		{64448ECC-32AC-48E5-AB20-98B987BED95C}.Release|x64.Build.0 = Release|x64
 		{64448ECC-32AC-48E5-AB20-98B987BED95C}.Release|x86.ActiveCfg = Release|Win32
 		{64448ECC-32AC-48E5-AB20-98B987BED95C}.Release|x86.Build.0 = Release|Win32
+		{6E4C0837-FAB4-4760-A4FC-15EF89476173}.Debug|x64.ActiveCfg = Debug|x64
+		{6E4C0837-FAB4-4760-A4FC-15EF89476173}.Debug|x64.Build.0 = Debug|x64
+		{6E4C0837-FAB4-4760-A4FC-15EF89476173}.Debug|x86.ActiveCfg = Debug|Win32
+		{6E4C0837-FAB4-4760-A4FC-15EF89476173}.Debug|x86.Build.0 = Debug|Win32
+		{6E4C0837-FAB4-4760-A4FC-15EF89476173}.Release|x64.ActiveCfg = Release|x64
+		{6E4C0837-FAB4-4760-A4FC-15EF89476173}.Release|x64.Build.0 = Release|x64
+		{6E4C0837-FAB4-4760-A4FC-15EF89476173}.Release|x86.ActiveCfg = Release|Win32
+		{6E4C0837-FAB4-4760-A4FC-15EF89476173}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

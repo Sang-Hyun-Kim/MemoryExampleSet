@@ -18,6 +18,18 @@
 // 몇번째락 index를 사용할 것이냐+ 클래스 내부에서 진행되는 이름이기때문에
 //typeid를 통해서 해당 클래스의 이름을 얻어오는 코드로 작성, 컴파일러가 런타임에 해당하는 객체의 이름을 얻어옴
 
+/*--------
+    Memory
+--------*/
+
+#ifdef _DEBUG
+#define Xalloc(size)		StompAllocator::Alloc(size)
+#define Xrelease(ptr)		StompAllocator::Release(ptr)
+#else
+#define Xalloc(size)        BaseAllocator::Alloc(size);
+#define Xrelease(ptr)       BaseAllocator::Release(ptr);
+#endif
+
 // CRASH를 인위적으로 내고싶을때 사용
 // CRASH를 내고싶어서 의도적으로 코드를 꼬아도 (ex:3/0 ) 컴파일리가 알아서 잡아버릴 수 도있음
 // 여기서 cause에는 어떤 오류가 나는건지 그냥 입력을 받는 부분(CRASH 내부에서 사용되는 변수가 아님)
@@ -26,7 +38,7 @@
 
 #define CRASH(cause)                            \
 {                                               \
-    uint32* crash = nullptr;              \
+    uint32* crash = nullptr;                \
     __analysis_assume(crash != nullptr);        \
     *crash = 0xDEADBEEF;                        \
 }

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Allocator.h"
+#include "Memory.h"
 
 void* BaseAllocator::Alloc(int32 size)
 {
@@ -33,4 +34,18 @@ void StompAllocator::Release(void* ptr)
     const int64 address = reinterpret_cast<int64>(ptr);
     const int64 baseAddress = address - (address % PAGE_SIZE);
     ::VirtualFree(reinterpret_cast<void*>(baseAddress), 0, MEM_RELEASE);
+}
+
+void* PoolAllocator::Alloc(int32 size)
+{
+    return GMemory->Allocate(size);
+    // CoreMacro.h에 설정된 Xalloc/Xrelease에 의해
+    // PoolAllocator가 실행된 다면 전역으로 만든 GMemory 객체에 의해 Memory::Allocate/Release가
+    // 실행된다. 그러면 메모리풀을 구현한 대로 작동할 예정
+    // 서로 다른 클래스 임에도 특정 크기의 객체끼리 관리하는 것이 특징 임을 알아라
+}
+
+void PoolAllocator::Release(void* ptr)
+{
+    GMemory->Release(ptr);
 }

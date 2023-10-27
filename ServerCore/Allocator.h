@@ -26,6 +26,21 @@ public:
 	static void		Release(void* ptr);
 
 };
+
+//----------------
+// PoolAllocator
+//----------------
+// 버그 체크에 유용
+// 다만 배우 작은 변수도 4096배수로 할당되기 때문에 디버그때만 사용하는 것을 유의
+class PoolAllocator
+{
+	enum { PAGE_SIZE = 0x1000 }; // Window에서 메모리 할당을 해주는 함수인 VirtualAlloc의 두번째 인수가 Page 단위로
+	// 인자를 받기 때문에 PAGE_SIZE의 배수로 기입해 줄 것이다.
+public:
+	static void*	Alloc(int32 size);
+	static void		Release(void* ptr);
+
+};
 //----------------
 // STL  Allocator
 //----------------
@@ -44,7 +59,7 @@ public:
 	template<typename Other>
 	StlAllocator(const StlAllocator<Other>&) {}
 
-	T* allocate(size_t)
+	T* allocate(size_t count)
 	{
 		// 메모리 사이즈 계산
 		const int32 size = static_cast<int32>(count * sizeof(T));

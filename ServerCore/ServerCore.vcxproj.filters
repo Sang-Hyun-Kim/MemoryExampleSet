@@ -54,6 +54,7 @@
     <ClInclude Include="Container.h">
       <Filter>Memory</Filter>
     </ClInclude>
+    <ClInclude Include="MemoryPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CorePch.cpp">
@@ -89,5 +90,6 @@
     <ClCompile Include="GameServer.cpp">
       <Filter>Main</Filter>
     </ClCompile>
+    <ClCompile Include="MemoryPool.cpp" />
   </ItemGroup>
 </Project>

@@ -72,14 +72,32 @@ int main()
 	//info.dwPageSize;
 	//info.dwAllocationGranularity;
 
-	int* test = (int*)::VirtualAlloc(NULL, 4, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-	*test = 100;
-	::VirtualFree(test, 0, MEM_RELEASE);
+	//int* test = (int*)::VirtualAlloc(NULL, 4, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+	//*test = 100;
+	//::VirtualFree(test, 0, MEM_RELEASE);
 
 
 
-	Knight* knight = xnew<Knight>();
+	//Knight* knight = xnew<Knight>();
 
-	xdelete(knight);
+	//xdelete(knight);
 
+	// MemoryPool 실습 코드
+	// 멀티스레드 제작
+	for (int32 i = 0; i < 5; i++)
+	{
+		GThreadManager->Launch([]()
+			{
+				while (true)
+				{
+					XVector<Knight> v(10);
+
+					XMap<int32, Knight> m;
+					m[100] = Knight();
+
+					this_thread::sleep_for(10ms);
+				}
+		});
+	}
+	GThreadManager->Join();
 }

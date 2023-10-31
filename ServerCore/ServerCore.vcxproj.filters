@@ -55,6 +55,7 @@
       <Filter>Memory</Filter>
     </ClInclude>
     <ClInclude Include="MemoryPool.h" />
+    <ClInclude Include="LockFreeStack.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CorePch.cpp">
@@ -91,5 +92,6 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="MemoryPool.cpp" />
+    <ClCompile Include="LockFreeStack.cpp" />
   </ItemGroup>
 </Project>

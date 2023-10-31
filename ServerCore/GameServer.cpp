@@ -3,7 +3,7 @@
 #include "CorePch.h"
 #include <thread>
 #include <atomic>
-
+#include "LockFreeStack.h"
 // 예제3 MemoryExample
 // 메모리 할당(Allocator)
 // new delete 사용중 쪼개진 메모리를 제대로 관리해 자원 효율을 높히려는 시도 연습
@@ -37,6 +37,14 @@ public:
 	//}
 };
 
+DECLSPEC_ALIGN(16)
+class Data //:public SListEntry
+{
+public:
+	SListEntry _entry;
+
+	int64 _rand = rand() % 1000;
+};
 
 // 이러면 모든 것에 대해 전역으로 작동(위험)
 //void* operator new(size_t size)
@@ -62,6 +70,8 @@ public:
 //	::free(ptr);
 //}
 
+SListHeader* GHeader;
+
 int main()
 {
 	//Knight* knight = new Knight();
@@ -84,20 +94,72 @@ int main()
 
 	// MemoryPool 실습 코드
 	// 멀티스레드 제작
-	for (int32 i = 0; i < 5; i++)
+	//for (int32 i = 0; i < 5; i++)
+	//{
+	//	GThreadManager->Launch([]()
+	//		{
+	//			while (true)
+	//			{
+	//				XVector<Knight> v(10);
+
+	//				XMap<int32, Knight> m;
+	//				m[100] = Knight();
+
+	//				this_thread::sleep_for(10ms);
+	//			}
+	//	});
+	//}
+	//GThreadManager->Join();
+
+	GHeader = new SListHeader();
+	ASSERT_CRASH(((uint64)GHeader % 16) == 0); // 16바이트 정렬 체크
+	//SListHeader header;
+	//InitializeHead(&header); // 초기화
+	InitializeHead(GHeader);
+	//Data* data = new Data();
+	//PushEntrySList(&header,(SListEntry*)data);
+
+	//Data* popData = (Data*)PopEntrySList(&header);
+	//// 데이터 변환에 유의
+
+	for (int32 i = 0; i < 3; i++)
 	{
 		GThreadManager->Launch([]()
 			{
 				while (true)
 				{
-					XVector<Knight> v(10);
+					Data* data = new Data();
+					ASSERT_CRASH(((uint64)data % 16) == 0);
 
-					XMap<int32, Knight> m;
-					m[100] = Knight();
-
+					PushEntrySList(GHeader, (SListEntry*)data);
 					this_thread::sleep_for(10ms);
 				}
-		});
+
+			});
+	}
+
+	for (int32 i = 0; i < 2; i++)
+	{
+		GThreadManager->Launch([]()
+			{
+				while (true)
+				{
+					Data* pop = nullptr;
+					pop = (Data*)PopEntrySList(GHeader);
+					// 데이터를 헤더에서 추출
+					if(pop)
+					{
+						cout << pop->_rand << endl;
+						delete pop;
+					}
+					else// 데이터가 없으며
+					{
+						cout << "NONE" << endl;
+					}
+				}
+
+			});
 	}
 	GThreadManager->Join();
+
 }

@@ -13,14 +13,7 @@
 class Knight
 {
 public:
-	Knight()
-	{
-		cout << "Knight()" << endl;
-	}
-	~Knight()
-	{
-		cout << "~Knight()" << endl;
-	}
+	int32 _hp = rand() % 1000;
 
 	// 클래스 안에 넣으면 해당 클래스에게만 적용
 	// 버전에 따라 new() 인수를 더 넣어줘야함
@@ -37,14 +30,24 @@ public:
 	//}
 };
 
-DECLSPEC_ALIGN(16)
-class Data //:public SListEntry
-{
-public:
-	SListEntry _entry;
+//DECLSPEC_ALIGN(16)
+//class Data //:public SListEntry
+//{
+//public:
+//	SListEntry _entry;
+//
+//	int64 _rand = rand() % 1000;
+//};
 
-	int64 _rand = rand() % 1000;
-};
+// MS에서 직접 제공하는 MemoryPool 구조체로 변경
+//DECLSPEC_ALIGN(16)
+//class Data //:public SListEntry
+//{
+//public:
+//	SLIST_ENTRY _entry; 
+//
+//	int64 _rand = rand() % 1000;
+//};
 
 // 이러면 모든 것에 대해 전역으로 작동(위험)
 //void* operator new(size_t size)
@@ -70,7 +73,7 @@ public:
 //	::free(ptr);
 //}
 
-SListHeader* GHeader;
+//SLIST_HEADER* GHeader;
 
 int main()
 {
@@ -111,11 +114,61 @@ int main()
 	//}
 	//GThreadManager->Join();
 
-	GHeader = new SListHeader();
-	ASSERT_CRASH(((uint64)GHeader % 16) == 0); // 16바이트 정렬 체크
+	//GHeader = new SListHeader();
+	//ASSERT_CRASH(((uint64)GHeader % 16) == 0); // 16바이트 정렬 체크
+	////SListHeader header;
+	////InitializeHead(&header); // 초기화
+	//InitializeHead(GHeader);
+	////Data* data = new Data();
+	////PushEntrySList(&header,(SListEntry*)data);
+
+	////Data* popData = (Data*)PopEntrySList(&header);
+	////// 데이터 변환에 유의
+
+	//for (int32 i = 0; i < 3; i++)
+	//{
+	//	GThreadManager->Launch([]()
+	//		{
+	//			while (true)
+	//			{
+	//				Data* data = new Data();
+	//				ASSERT_CRASH(((uint64)data % 16) == 0);
+
+	//				PushEntrySList(GHeader, (SListEntry*)data);
+	//				this_thread::sleep_for(10ms);
+	//			}
+
+	//		});
+	//}
+
+	//for (int32 i = 0; i < 2; i++)
+	//{
+	//	GThreadManager->Launch([]()
+	//		{
+	//			while (true)
+	//			{
+	//				Data* pop = nullptr;
+	//				pop = (Data*)PopEntrySList(GHeader);
+	//				// 데이터를 헤더에서 추출
+	//				if(pop)
+	//				{
+	//					cout << pop->_rand << endl;
+	//					delete pop;
+	//				}
+	//				else// 데이터가 없으며
+	//				{
+	//					cout << "NONE" << endl;
+	//				}
+	//			}
+
+	//		});
+	//}
+	//GThreadManager->Join();
+	//GHeader = new SLIST_HEADER();
+	//ASSERT_CRASH(((uint64)GHeader % 16) == 0); // 16바이트 정렬 체크
 	//SListHeader header;
 	//InitializeHead(&header); // 초기화
-	InitializeHead(GHeader);
+	//::InitializeSListHead(GHeader);
 	//Data* data = new Data();
 	//PushEntrySList(&header,(SListEntry*)data);
 
@@ -128,38 +181,14 @@ int main()
 			{
 				while (true)
 				{
-					Data* data = new Data();
-					ASSERT_CRASH(((uint64)data % 16) == 0);
-
-					PushEntrySList(GHeader, (SListEntry*)data);
+					Knight* knight = xnew<Knight>();
+					cout << knight->_hp << endl;
+					
 					this_thread::sleep_for(10ms);
-				}
-
-			});
-	}
-
-	for (int32 i = 0; i < 2; i++)
-	{
-		GThreadManager->Launch([]()
-			{
-				while (true)
-				{
-					Data* pop = nullptr;
-					pop = (Data*)PopEntrySList(GHeader);
-					// 데이터를 헤더에서 추출
-					if(pop)
-					{
-						cout << pop->_rand << endl;
-						delete pop;
-					}
-					else// 데이터가 없으며
-					{
-						cout << "NONE" << endl;
-					}
+					xdelete(knight);
 				}
 
 			});
 	}
 	GThreadManager->Join();
-
 }

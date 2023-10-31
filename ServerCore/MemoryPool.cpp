@@ -3,58 +3,48 @@
 
 MemoryPool::MemoryPool(int32 allocSize) : _allocSize(allocSize)
 {
+	::InitializeSListHead(&_header);
+
+
+
 }
 
 MemoryPool::~MemoryPool()
 {
-	while (_queue.empty() == false)
+	while (MemoryHeader* memory = static_cast<MemoryHeader*>(::InterlockedPopEntrySList(&_header)))
 	{
-		MemoryHeader* header = _queue.front();
-		_queue.pop();
-		::free(header);
+		::_aligned_free(memory);
 	}
 }
 
 void MemoryPool::Push(MemoryHeader* ptr)
 {
-	WRITE_LOCK;
 	ptr->allocSize = 0;
 
-	//Pool에 메모리 반납
-	_queue.push(ptr);
+	::InterlockedPushEntrySList(&_header, static_cast<PSLIST_ENTRY>(ptr));
 	_allocCount.fetch_sub(1);
 }
 
 MemoryHeader* MemoryPool::Pop()
 {
-	// Queue의 메모리 확인
-	MemoryHeader* header = nullptr;
+	// MemoryHeader를  List_Entry로 변환해서 넣어준 것이니  재변활 할때도 형변환이 필요함
+	// 상속받은 상태이니 static_cast 사용가능
+	MemoryHeader* memory = static_cast<MemoryHeader*>(::InterlockedPopEntrySList(&_header)	);
 
-	{
-		WRITE_LOCK;
-
-		//Pool에 여분이 있는지 체크
-		if (_queue.empty() == false)
-		{
-			// 하나 꺼내기
-			header = _queue.front();
-			_queue.pop();
-		}
-	
-	}
 	// 없으면 새로 할당
 	// 생성자에서 만들고 시작하는 방식도 있음
-	if (header == nullptr)
+	if (memory == nullptr)
 	{
-		header = reinterpret_cast<MemoryHeader*>(::malloc(_allocSize));
+		memory = reinterpret_cast<MemoryHeader*>(::_aligned_malloc(_allocSize, SLIST_ALIGNMENT)); // 16바이트 정렬을 보장해줘야 하기 때문에 ::malloc 대신
+		// alligned_malloc 사용
 	}
 	else
 	{
-		ASSERT_CRASH(header->allocSize == 0); // 디버그용, 사이즈 체크
+		ASSERT_CRASH(memory->allocSize == 0); // 디버그용, 사이즈 체크
 	}
 
 	_allocCount.fetch_add(1);
 
 
-	return header;
+	return memory;
 }

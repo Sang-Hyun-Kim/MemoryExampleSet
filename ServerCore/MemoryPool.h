@@ -2,12 +2,18 @@
 
 // 동일한 크기의 메모리를 모아서 관리
 
+enum
+{
+	SLIST_ALIGNMENT = 16
+};
+
 //디버깅을 도와줄 메모리 헤더
 //----------------
 // Memory Header
 //----------------
 
-struct MemoryHeader
+DECLSPEC_ALIGN(SLIST_ALIGNMENT)
+struct MemoryHeader : SLIST_ENTRY
 {
 	MemoryHeader(int32 size) : allocSize(size) {}
 
@@ -33,6 +39,8 @@ struct MemoryHeader
 /*
 	MemoryPool
 */
+
+DECLSPEC_ALIGN(SLIST_ALIGNMENT)
 class MemoryPool
 {
 public:
@@ -44,13 +52,32 @@ public:
 	// 메모리가 필요해서 사용하려고 한다면 Header를 추출해서 사용
 	MemoryHeader*		 Pop();
 private:
+	SLIST_HEADER	_header; // LockFreeStack 관리
 	// 다수의 MemoryPool이 각각의 존재가 담당하고있는 크기 
-	int32 _allocSize = 0;
-	atomic<int32> _allocCount = 0; // Memory Pool에서 담당하는  Memory 개수
-
-	USE_LOCK;
-	queue<MemoryHeader*> _queue;
-
+	int32			_allocSize = 0;
+	atomic<int32>	_allocCount = 0; // Memory Pool에서 담당하는  Memory 개수
 
 };
 
+//
+//DECLSPEC_ALIGN(SLIST_ALIGNMENT)
+//class MemoryPool
+//{
+//public:
+//	MemoryPool(int32 allocSize);
+//	~MemoryPool();
+//
+//	// 메모리를 다 사용했으면 해제하지 않고 Pool에 반납
+//	void				 Push(MemoryHeader* ptr);
+//	// 메모리가 필요해서 사용하려고 한다면 Header를 추출해서 사용
+//	MemoryHeader* Pop();
+//private:
+//	// 다수의 MemoryPool이 각각의 존재가 담당하고있는 크기 
+//	int32 _allocSize = 0;
+//	atomic<int32> _allocCount = 0; // Memory Pool에서 담당하는  Memory 개수
+//
+//	USE_LOCK;
+//	queue<MemoryHeader*> _queue;
+//
+//
+//};

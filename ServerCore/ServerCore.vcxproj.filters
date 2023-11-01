@@ -56,6 +56,7 @@
     </ClInclude>
     <ClInclude Include="MemoryPool.h" />
     <ClInclude Include="LockFreeStack.h" />
+    <ClInclude Include="ObjectPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CorePch.cpp">
@@ -93,5 +94,6 @@
     </ClCompile>
     <ClCompile Include="MemoryPool.cpp" />
     <ClCompile Include="LockFreeStack.cpp" />
+    <ClCompile Include="ObjectPool.cpp" />
   </ItemGroup>
 </Project>

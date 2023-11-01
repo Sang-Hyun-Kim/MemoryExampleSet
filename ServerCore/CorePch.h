@@ -11,4 +11,4 @@ using namespace std;
 #include <Windows.h>
 #include <iostream>
 #include "Lock.h" // 커스텀 락 헤더
-
+#include "ObjectPool.h"

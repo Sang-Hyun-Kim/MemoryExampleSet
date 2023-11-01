@@ -36,7 +36,7 @@ private:
 template<typename Type, typename... Args>
 Type* xnew(Args&&... args)
 {
-	Type* memory = static_cast<Type*>(Xalloc(sizeof(Type)));
+	Type* memory = static_cast<Type*>(PoolAllocator::Alloc(sizeof(Type)));
 	// 여기까지만 만들면 메모리가 할당은 해주는데 객체 생성자/소멸자를 호출하지 않는 문제가 발생함
 
 	// 메모리가 할당된 상태에서 그 메모리 위에다가 객체의 생성자를 호출하는 문법이
@@ -55,5 +55,11 @@ void xdelete(Type* obj)
 {
 	// 소멸자 호출
 	obj->~Type(); // 객체를 대상으로 소멸자 호출
-	Xrelease(obj);
+	PoolAllocator::Release(obj);
+}
+
+template<typename Type>
+shared_ptr<Type> MakeShared() // 메모리 풀도 ObjectPool 처럼 makeshared를 위한 작업이 필요함
+{
+	return shared_ptr<Type>{ xnew<Type>(), xdelete<Type>};
 }

@@ -175,6 +175,15 @@ int main()
 	//Data* popData = (Data*)PopEntrySList(&header);
 	//// 데이터 변환에 유의
 
+	Knight* k = ObjectPool<Knight>::Pop();
+	ObjectPool<Knight>::Push(k);
+	// 사용과 반납
+	// shared_ptr<> = make_shared<>() => 기본적인 new/ delete를 사용하기 때문에 Allocator를 사용할 수 없게 됨
+	// 인자로 넣어 줄 수가 있음
+	// shared_ptr<Knight> sptr = { ObjectPool<Knight>::Pop(), ObjectPool<Knight>::Push};
+	
+	shared_ptr<Knight> sptr = ObjectPool<Knight>::MakeShared();
+	shared_ptr<Knight> sptr2 = MakeShared<Knight>();
 	for (int32 i = 0; i < 3; i++)
 	{
 		GThreadManager->Launch([]()

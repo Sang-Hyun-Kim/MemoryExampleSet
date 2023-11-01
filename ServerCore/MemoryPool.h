@@ -55,8 +55,8 @@ private:
 	SLIST_HEADER	_header; // LockFreeStack 관리
 	// 다수의 MemoryPool이 각각의 존재가 담당하고있는 크기 
 	int32			_allocSize = 0;
-	atomic<int32>	_allocCount = 0; // Memory Pool에서 담당하는  Memory 개수
-
+	atomic<int32>	_useCount = 0; // Memory Pool에서 담당하는  Memory 개수
+	atomic<int32> _reserveCount = 0; // MemoryPool에 저장된 개수 카운팅(디버깅용)
 };
 
 //

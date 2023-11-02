@@ -34,6 +34,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="RefCountable.h" />
     <ClInclude Include="ThreadManager.h" />
+    <ClInclude Include="TypeCast.h" />
     <ClInclude Include="Types.h" />
   </ItemGroup>
   <ItemGroup>
@@ -65,6 +66,7 @@
     <ClCompile Include="RefCountable.cpp" />
     <ClCompile Include="ThreadManager.cpp" />
     <ClCompile Include="GameServer.cpp" />
+    <ClCompile Include="TypeCast.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

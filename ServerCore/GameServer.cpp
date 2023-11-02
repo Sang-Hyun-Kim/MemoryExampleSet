@@ -9,6 +9,7 @@
 // new delete 사용중 쪼개진 메모리를 제대로 관리해 자원 효율을 높히려는 시도 연습
 // new와 delete도 operator overloading이 가능하다.
 #include "Memory.h"
+#include "TypeCast.h"
 
 class Knight
 {
@@ -200,4 +201,6 @@ int main()
 			});
 	}
 	GThreadManager->Join();
+
+	int32 len1 = Length<TypeList<>>::value;
 }

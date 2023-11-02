@@ -12,3 +12,4 @@ using namespace std;
 #include <iostream>
 #include "Lock.h" // 커스텀 락 헤더
 #include "ObjectPool.h"
+#include "TypeCast.h"
